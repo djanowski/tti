@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'rmagick'
 require 'fileutils'
+require 'uri'
+require 'cgi'
 require 'active_support'
 require File.dirname(__FILE__) + '/configurable'
 
@@ -40,6 +42,10 @@ class Tti
     File.join(*[config.path_prefix, filename].compact)
   end
 
+  def url
+    CGI.escape [config.url_prefix || config.path_prefix, filename].join('/')
+  end
+
   def width_or_computed
     width? ? width : computed_width
   end
@@ -69,7 +75,7 @@ class Tti
 
   def to_html
     save
-    %{<img src="#{CGI::escape(path)}" alt="#{text}" />}
+    %{<img src="#{url}" alt="#{text}" />}
   end
 
   configure do |config|
