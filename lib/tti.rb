@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'rmagick'
 require 'fileutils'
+require 'active_support'
 require 'lib/configurable'
 
 class Tti
