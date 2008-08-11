@@ -30,6 +30,16 @@ describe Tti do
     Tti.new('With spaces').to_html.should have_tag('img[@src=tmp%2FWith+spaces.png]')
   end
 
+  it "generates text in different font sizes" do
+    another_tti = Tti.new('Hello')
+    another_tti.font_size = 36
+    
+    @tti.save
+    another_tti.save
+
+    File.read(@tti.path).should_not == File.read(another_tti.path)
+  end
+
   describe "Configuration" do
     
     it "allows to configure a path prefix to save images" do

@@ -9,7 +9,7 @@ require File.dirname(__FILE__) + '/configurable'
 class Tti
   include Configurable
 
-  attr_accessor :text, :width
+  attr_accessor :text, :width, :font_size
 
   def initialize(text)
     @text = text
@@ -19,22 +19,30 @@ class Tti
     @text.to_s
   end
 
+  def font_size
+    @font_size ||= 24
+  end
+
   def save
     return if text.blank?
 
     width = width_or_computed
-    font = self.font
+    font, size = self.font, self.font_size
     
     Magick::Image.read("caption:#{text}") do |i|
       i.size = width
       i.font = font
-      i.pointsize = 36
+      i.pointsize = size
       i.antialias = true
     end.first.write(path)
   end
 
   def filename
-    "#{text}%s.png" % (width? ? "@#{width}" : '')
+    opts = []
+    opts << "#{font_size}pt" unless font_size == 24
+    opts << width if width_set?
+
+    "#{text}%s.png" % (!opts.empty? ? "@#{opts.join('')}" : '')
   end
 
   def path
@@ -47,10 +55,10 @@ class Tti
   end
 
   def width_or_computed
-    width? ? width : computed_width
+    width_set? ? width : computed_width
   end
 
-  def width?
+  def width_set?
     !(width.nil? || width.zero?)
   end
 
@@ -58,10 +66,10 @@ class Tti
     @computed_width ||= begin
       canvas = Magick::Image.new(1,1)
 
-      font = self.font
+      font, size = self.font, self.font_size
 
       metrics = Magick::Draw.new.annotate(canvas, 0, 0, 0, 0, text) do |i|
-        i.pointsize = 24
+        i.pointsize = size
         i.font = font
       end.get_type_metrics(canvas, text)
 
