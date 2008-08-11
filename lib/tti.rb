@@ -27,7 +27,7 @@ class Tti
     return if text.blank?
 
     width = width_or_computed
-    font, size = self.font, self.font_size
+    font, size = self.font_file, self.font_size
     
     Magick::Image.read("caption:#{text}") do |i|
       i.size = width
@@ -39,10 +39,11 @@ class Tti
 
   def filename
     opts = []
+    opts << font unless font == 'Helvetica'
     opts << "#{font_size}pt" unless font_size == 24
     opts << width if width_set?
 
-    "#{text}%s.png" % (!opts.empty? ? "@#{opts.join('')}" : '')
+    "#{text}%s.png" % (!opts.empty? ? "@#{opts.join('__')}" : '')
   end
 
   def path
@@ -66,24 +67,31 @@ class Tti
     @computed_width ||= begin
       canvas = Magick::Image.new(1,1)
 
-      font, size = self.font, self.font_size
+      font, size = self.font_file, self.font_size
 
       metrics = Magick::Draw.new.annotate(canvas, 0, 0, 0, 0, text) do |i|
         i.pointsize = size
         i.font = font
+        i.gravity = Magick::CenterGravity
       end.get_type_metrics(canvas, text)
 
-      metrics.width.to_i
+      metrics.width.ceil
     end
   end
 
   def font
-    @font ||= 'Helvetica'
+    @font ||= config.font || 'Helvetica'
   end
 
   def to_html
     save
     %{<img src="#{url}" alt="#{text}" />}
+  end
+
+  def font_file
+    file = Dir["#{font}.*", "fonts/#{font}.*"].first
+
+    file ? File.join(Dir.pwd, file) : font
   end
 
   configure do |config|

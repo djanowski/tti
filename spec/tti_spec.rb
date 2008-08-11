@@ -60,6 +60,19 @@ describe Tti do
       @tti.to_html.should have_tag('img[@src=some%2Furl%2FHello.png]')
     end
 
+    it "allows to configure a default font name" do
+      @tti.save
+
+      Tti.configure do |config|
+        config.font = 'chopin'
+      end
+
+      another_tti = Tti.new('Hello')
+      another_tti.save
+
+      File.read(another_tti.path).should_not == File.read(@tti.path)
+    end
+
   end
 
   describe "as a Rails plugin" do
