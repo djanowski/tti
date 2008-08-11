@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
-  s.name = 'rails_basic_helpers'
-  s.version = '0.0.3'
-  s.summary = %{rails_basic_helpers}
+  s.name = 'tti'
+  s.version = '0.1.0'
+  s.summary = %{A Ruby text-to-image generation class.}
   s.description = %{}
   s.date = %q{2008-06-25}
   s.author = "Damian Janowski"
@@ -15,5 +15,5 @@ Gem::Specification.new do |s|
 
   s.extra_rdoc_files = ["README"]
   s.has_rdoc = true
-  s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "rails_basic_helpers", "--main", "README"]
+  s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "tti", "--main", "README"]
 end
