@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rmagick'
 require 'fileutils'
 require 'active_support'
-require 'lib/configurable'
+require File.dirname(__FILE__) + '/configurable'
 
 class Tti
   include Configurable
@@ -26,7 +26,7 @@ class Tti
     Magick::Image.read("caption:#{text}") do |i|
       i.size = width
       i.font = font
-      i.pointsize = 24
+      i.pointsize = 36
       i.antialias = true
     end.first.write path
   end
@@ -69,8 +69,7 @@ class Tti
 
   def to_html
     save
-    #image_tag(CGI::escape(filename), :alt => text)
-    %{<img src="#{filename}" alt="#{text}" />}
+    %{<img src="#{CGI::escape(path)}" alt="#{text}" />}
   end
 
   configure do |config|

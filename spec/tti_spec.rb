@@ -24,6 +24,9 @@ describe Tti do
 
   it "generates an HTML tag for the generated image" do
     @tti.to_html.should have_tag('img[@alt=Hello]')
+
+    CGI.stub!(:escape).with('tmp/With spaces.png').and_return('tmp/With+spaces.png')
+    Tti.new('With spaces').to_html.should have_tag('img[@src=tmp/With+spaces.png]')
   end
 
   describe "Configuration" do
@@ -34,6 +37,9 @@ describe Tti do
       end
 
       lambda { @tti.save }.should create_file('tmp/path/Hello.png')
+      
+      CGI.stub!(:escape).with('tmp/path/Hello.png').and_return('tmp/path/Hello.png')
+      @tti.to_html.should have_tag('img[@src=tmp/path/Hello.png]')
     end
 
   end
