@@ -8,6 +8,8 @@ describe Tti do
 
   it "generates an image file out of text" do
     lambda { @tti.save }.should create_file('tmp/Hello.png')
+
+    lambda { Tti.new('').save }.should_not raise_error
   end
 
   it "creates a file name for the generated image" do

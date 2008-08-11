@@ -18,7 +18,7 @@ class Tti
   end
 
   def save
-    #font = "HelveticaNeueLTStd-Th.otf"
+    return if text.blank?
 
     width = width_or_computed
     font = self.font
@@ -28,7 +28,7 @@ class Tti
       i.font = font
       i.pointsize = 36
       i.antialias = true
-    end.first.write path
+    end.first.write(path)
   end
 
   def filename
