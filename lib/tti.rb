@@ -74,7 +74,7 @@ class Tti
       metrics = Magick::Draw.new.annotate(canvas, 0, 0, 0, 0, text) do |i|
         i.pointsize = size
         i.font = font
-        i.gravity = Magick::CenterGravity
+        # i.gravity = Magick::CenterGravity
       end.get_type_metrics(canvas, text)
 
       metrics.width.ceil
