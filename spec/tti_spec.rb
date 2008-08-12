@@ -93,6 +93,7 @@ describe Tti do
     it "saves images to the correct Rails path" do
       require 'rails/init'
       Tti.configuration.path_prefix.should == 'public/images/tti'
+      Tti.configuration.url_prefix.should == '/images/tti'
     end
 
   end if $rails
