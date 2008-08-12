@@ -20,7 +20,7 @@ class Tti
   end
 
   def font_size
-    @font_size ||= 24
+    @font_size ||= config.font_size
   end
 
   def save
@@ -35,12 +35,14 @@ class Tti
       i.pointsize = size
       i.antialias = true
     end.first.write(path)
+
+    self
   end
 
   def filename
     opts = []
     opts << font unless font == 'Helvetica'
-    opts << "#{font_size}pt" unless font_size == 24
+    opts << "#{font_size}pt" unless font_size == config.font_size
     opts << width if width_set?
 
     "#{text}%s.png" % (!opts.empty? ? "@#{opts.join('__')}" : '')
@@ -96,5 +98,6 @@ class Tti
 
   configure do |config|
     config.path_prefix = 'tmp'
+    config.font_size = 24
   end
 end

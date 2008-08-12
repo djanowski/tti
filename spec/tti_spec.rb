@@ -73,6 +73,12 @@ describe Tti do
       File.read(another_tti.path).should_not == File.read(@tti.path)
     end
 
+    it "allows to configure a default font size" do
+      configuring Tti do |config|
+        config.font_size = 12
+      end.should change { File.read(Tti.new('Hello').save.path) }
+    end
+
   end
 
   describe "as a Rails plugin" do

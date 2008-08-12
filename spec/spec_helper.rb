@@ -28,3 +28,11 @@ end
 def add_method(klass, method)
   change { klass.new.respond_to?(method) }.from(false).to(true)
 end
+
+def configuring(klass, &block)
+  # TODO: Forget the config after the assertion.
+
+  lambda do
+    klass.configure(&block)
+  end
+end
