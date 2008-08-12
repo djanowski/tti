@@ -13,6 +13,8 @@ class Tti
 
   def initialize(text)
     @text = text
+
+    yield(self) if block_given?
   end
 
   def text

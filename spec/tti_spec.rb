@@ -10,6 +10,10 @@ describe Tti do
     lambda { @tti.save }.should create_file('tmp/Hello.png')
 
     lambda { Tti.new('').save }.should_not raise_error
+
+    Tti.new('Bye') do |t|
+      t.font_size = 10
+    end.font_size.should == 10
   end
 
   it "creates a file name for the generated image" do
@@ -86,8 +90,11 @@ describe Tti do
     it "provides a helper to ActionView" do
       lambda { require 'rails/init' }.should add_method(ActionView::Base, :tti)
 
-      Tti.stub!(:new).and_return(mock('Tti', :to_html => 'html'))
-      ActionView::Base.new.tti.should == 'html'
+      tti = mock('Tti', :to_html => 'html')
+      tti.should_receive(:send).with("font_size=", 10)
+      Tti.stub!(:new).with('Hiya').and_yield(tti).and_return(tti)
+
+      ActionView::Base.new.tti('Hiya', :font_size => 10).should == 'html'
     end
 
     it "saves images to the correct Rails path" do
