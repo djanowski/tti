@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'rmagick'
+require 'RMagick'
 require 'fileutils'
 require 'uri'
 require 'cgi'
