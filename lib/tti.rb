@@ -93,7 +93,7 @@ class Tti
   end
 
   def font_file
-    file = Dir["#{font}.*", "fonts/#{font}.*"].first
+    file = Dir["#{font}.*"].first || Dir["fonts/#{font}.*"].first
 
     file ? File.join(Dir.pwd, file) : font
   end
