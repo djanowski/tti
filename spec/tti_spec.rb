@@ -46,6 +46,10 @@ describe Tti do
 
   describe "Configuration" do
     
+    before(:each) do
+      Tti.configuration.reset!
+    end
+    
     it "allows to configure a path prefix to save images" do
       Tti.configure do |config|
         config.path_prefix = "tmp/path"
@@ -65,16 +69,9 @@ describe Tti do
     end
 
     it "allows to configure a default font name" do
-      @tti.save
-
-      Tti.configure do |config|
+      configuring Tti do |config|
         config.font = 'chopin'
-      end
-
-      another_tti = Tti.new('Hello')
-      another_tti.save
-
-      File.read(another_tti.path).should_not == File.read(@tti.path)
+      end.should change { File.read(Tti.new('Hello').save.path) }
     end
 
     it "allows to configure a default font size" do
@@ -83,12 +80,27 @@ describe Tti do
       end.should change { File.read(Tti.new('Hello').save.path) }
     end
 
+    it "allows to configure a directory for font lookup" do
+      configuring Tti do |config|
+        config.font = 'chopin'
+        config.fonts_dir = File.join(File.dirname(__FILE__), '..', 'unexisting_directory')
+      end.should change { File.read(Tti.new('Hello').save.path) }
+    end
+
   end
 
   describe "as a Rails plugin" do
 
+    before(:each) do
+      Tti.configuration.reset!
+    end
+
+    def rails_init
+      load File.join(File.dirname(__FILE__), '..', 'rails/init.rb')
+    end
+
     it "provides a helper to ActionView" do
-      lambda { require 'rails/init' }.should add_method(ActionView::Base, :tti)
+      lambda { rails_init }.should add_method(ActionView::Base, :tti)
 
       tti = mock('Tti', :to_html => 'html')
       tti.should_receive(:send).with("font_size=", 10)
@@ -98,9 +110,18 @@ describe Tti do
     end
 
     it "saves images to the correct Rails path" do
-      require 'rails/init'
+      rails_init
       Tti.configuration.path_prefix.should == 'public/images/tti'
       Tti.configuration.url_prefix.should == '/images/tti'
+    end
+
+    it "sets a correct directory for font lookup" do
+      ::RAILS_ROOT = '/tmp'
+
+      rails_init
+
+      Tti.configuration.fonts_dir.should include('/tmp/')
+      Tti.configuration.fonts_dir.should include('/tmp/fonts')
     end
 
   end if $rails

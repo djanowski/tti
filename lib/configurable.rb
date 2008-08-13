@@ -6,6 +6,7 @@ module Configurable
     def self.configure
       self.configuration ||= Configuration.new(self)
       yield(configuration)
+      configuration
     end
     EOS
   end
@@ -25,6 +26,14 @@ module Configurable
       else
         @config[key]
       end
+    end
+
+    def default!
+      @default_config = @config.dup
+    end
+
+    def reset!
+      @config = @default_config ? @default_config.dup : {}
     end
   end
 

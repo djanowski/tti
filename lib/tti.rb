@@ -93,7 +93,9 @@ class Tti
   end
 
   def font_file
-    file = Dir["#{font}.*"].first || Dir["fonts/#{font}.*"].first
+    file = Array(config.fonts_dir).detect do |dir|
+      Dir[File.join(dir, "#{font}.*")].first
+    end
 
     file ? File.join(Dir.pwd, file) : font
   end
@@ -101,5 +103,6 @@ class Tti
   configure do |config|
     config.path_prefix = 'tmp'
     config.font_size = 24
-  end
+    config.fonts_dir = ['.', 'fonts']
+  end.default!
 end
