@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'tti'
-  s.version = '0.4.0'
+  s.version = '0.4.1'
   s.summary = %{A Ruby text-to-image generation class.}
   s.description = %{}
   s.date = %q{2008-06-25}

@@ -93,11 +93,9 @@ class Tti
   end
 
   def font_file
-    file = Array(config.fonts_dir).detect do |dir|
+    Array(config.fonts_dir).map do |dir|
       Dir[File.join(dir, "#{font}.*")].first
-    end
-
-    file ? File.join(Dir.pwd, file) : font
+    end.compact.first || font
   end
 
   def h(*args)
