@@ -56,7 +56,7 @@ class Tti
   end
 
   def url
-    CGI.escape [config.url_prefix || config.path_prefix, filename].join('/')
+    [config.url_prefix || config.path_prefix, filename].join('/')
   end
 
   def width_or_computed
@@ -89,7 +89,7 @@ class Tti
 
   def to_html
     save
-    %{<img src="#{url}" alt="#{text}" />}
+    %{<img src="#{h url}" alt="#{h text}" />}
   end
 
   def font_file
@@ -98,6 +98,10 @@ class Tti
     end
 
     file ? File.join(Dir.pwd, file) : font
+  end
+
+  def h(*args)
+    CGI.escapeHTML(*args)
   end
 
   configure do |config|

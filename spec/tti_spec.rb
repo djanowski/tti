@@ -31,7 +31,11 @@ describe Tti do
   it "generates an HTML tag for the generated image" do
     @tti.to_html.should have_tag('img[@alt=Hello]')
 
-    Tti.new('With spaces').to_html.should have_tag('img[@src=tmp%2FWith+spaces.png]')
+    Tti.new('With spaces').to_html.should have_tag('img[@src=tmp/With spaces.png]')
+
+    # No Hpricot here, we are asserting that the HTML is escaped.
+    Tti.new('With >').to_html.should =~ /src="tmp\/With &gt;.png"/
+    Tti.new('With >').to_html.should =~ /alt="With &gt;"/
   end
 
   it "generates text in different font sizes" do
@@ -57,7 +61,7 @@ describe Tti do
 
       lambda { @tti.save }.should create_file('tmp/path/Hello.png')
       
-      @tti.to_html.should have_tag('img[@src=tmp%2Fpath%2FHello.png]')
+      @tti.to_html.should have_tag('img[@src=tmp/path/Hello.png]')
     end
 
     it "allows to configure a URL prefix for generated HTML" do
@@ -65,7 +69,7 @@ describe Tti do
         config.url_prefix = "some/url"
       end
 
-      @tti.to_html.should have_tag('img[@src=some%2Furl%2FHello.png]')
+      @tti.to_html.should have_tag('img[@src=some/url/Hello.png]')
     end
 
     it "allows to configure a default font name" do
