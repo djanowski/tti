@@ -2,7 +2,6 @@ require 'rake'
 require 'rake/gempackagetask'
 require 'rake/clean'
 require 'spec/rake/spectask'
-require 'spec/translator'
 
 gem_spec = eval(File.read('tti.gemspec'))
 
